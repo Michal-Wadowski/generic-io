@@ -1,12 +1,10 @@
 package com.example.genericio;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class Response {
-    private short command;
-
-    public Response(short command) {
-        this.command = command;
-    }
+    private Command command;
 }

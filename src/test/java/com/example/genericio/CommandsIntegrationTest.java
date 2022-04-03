@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.example.genericio.Command.PONG;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -34,7 +35,7 @@ class CommandsIntegrationTest {
         assertThat(response)
                 .isNotNull()
                 .extracting("command")
-                .isEqualTo((short)2);
+                .isEqualTo(PONG);
     }
 
     @Test

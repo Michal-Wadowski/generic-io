@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
+import static com.example.genericio.Command.PONG;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CommandsTest {
 
     @Test
-    void ping_should_send_size_and_command_packet() throws IOException {
+    void ping_should_send_size_and_command_packet() {
         // given
         Configuration configuration = new Configuration() {
             @Override
@@ -50,7 +50,7 @@ class CommandsTest {
     }
 
     @Test
-    void should_receive_command_from_port_stream() throws IOException {
+    void should_receive_command_from_port_stream() {
         // given
         Configuration configuration = new Configuration() {
             @Override
@@ -87,6 +87,6 @@ class CommandsTest {
         assertThat(response)
                 .isNotNull()
                 .extracting("command")
-                .isEqualTo((short)2);
+                .isEqualTo(PONG);
     }
 }
