@@ -1,17 +1,18 @@
 package com.example.genericio;
 
+import com.example.genericio.command.CommandFactory;
+import com.example.genericio.response.GenericResponse;
+import com.example.genericio.response.PongResponse;
+import com.example.genericio.response.ResponseFactory;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
-import static com.example.genericio.Command.PONG;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class CommandsIntegrationTest {
+class CommandFactoryIntegrationTest {
 
     @Test
     void ping_and_getResponse_should_use_real_communication() throws IOException {
@@ -25,17 +26,17 @@ class CommandsIntegrationTest {
 
         SerialPortWrapper serialPortWrapper = new SerialPortWrapperImpl(configuration);
 
-        Commands commands = new Commands(serialPortWrapper);
+        CommandFactory commandFactory = new CommandFactory(serialPortWrapper);
+        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // when
-        commands.ping();
-        Response response = commands.getResponse();
+        commandFactory.ping().send();
+        GenericResponse response = responseFactory.getResponse();
 
         // then
         assertThat(response)
                 .isNotNull()
-                .extracting("command")
-                .isEqualTo(PONG);
+                .isInstanceOf(PongResponse.class);
     }
 
     @Test
@@ -49,8 +50,6 @@ class CommandsIntegrationTest {
         };
 
         // when/then
-        assertThrows(FileNotFoundException.class, () -> {
-            new SerialPortWrapperImpl(configuration);
-        });
+        assertThrows(FileNotFoundException.class, () -> new SerialPortWrapperImpl(configuration));
     }
 }

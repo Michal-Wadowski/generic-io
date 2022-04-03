@@ -5,7 +5,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import static com.fazecast.jSerialComm.SerialPort.*;
+import static com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_BLOCKING;
 
 public class SerialPortWrapperImpl implements SerialPortWrapper {
 
@@ -22,11 +22,6 @@ public class SerialPortWrapperImpl implements SerialPortWrapper {
     @Override
     public void write(byte[] bytes) {
         commPort.writeBytes(bytes, bytes.length);
-    }
-
-    @Override
-    public int bytesAvailable() {
-        return commPort.bytesAvailable();
     }
 
     @Override
