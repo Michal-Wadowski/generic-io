@@ -1,6 +1,7 @@
 package com.example.genericio;
 
 import com.example.genericio.command.CommandFactory;
+import com.example.genericio.command.CommandIds;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -24,6 +25,11 @@ class CommandFactoryTest {
             public InputStream getInputStream() {
                 return null;
             }
+
+            @Override
+            public void close() {
+
+            }
         };
 
         CommandFactory commandFactory = new CommandFactory(serialPortWrapper);
@@ -34,6 +40,6 @@ class CommandFactoryTest {
         // then
         assertThat(serialPortWrapper)
                 .extracting("written")
-                .isEqualTo(new byte[]{2, 0, 1, 0});
+                .isEqualTo(new byte[]{2, 0, (byte) CommandIds.PING_COMMAND.ordinal(), 0});
     }
 }

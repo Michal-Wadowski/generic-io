@@ -20,6 +20,11 @@ public class SerialPortWrapperImpl implements SerialPortWrapper {
     }
 
     @Override
+    public void close() {
+        commPort.closePort();
+    }
+
+    @Override
     public void write(byte[] bytes) {
         commPort.writeBytes(bytes, bytes.length);
     }

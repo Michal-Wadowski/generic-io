@@ -1,6 +1,7 @@
 package com.example.genericio.response;
 
 import com.example.genericio.SerialPortWrapper;
+import com.example.genericio.command.CommandIds;
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
@@ -16,7 +17,9 @@ public class ResponseFactory {
     private final SerialPortWrapper serialPortWrapper;
 
     private final Map<Short, Function<ByteBuffer, GenericResponse>> responseCodesMap = Map.of(
-            PongResponse.COMMAND_ID, PongResponse::new
+            (short)CommandIds.PONG_COMMAND.ordinal(), PongResponse::new,
+            (short)CommandIds.WRITE_PIN_OK.ordinal(), WritePinResponse::new,
+            (short)CommandIds.READ_PIN_RESULT.ordinal(), ReadPinResponse::new
     );
 
     public GenericResponse getResponse() {

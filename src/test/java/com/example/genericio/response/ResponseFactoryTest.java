@@ -1,6 +1,7 @@
 package com.example.genericio.response;
 
 import com.example.genericio.SerialPortWrapper;
+import com.example.genericio.command.CommandIds;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +21,12 @@ class ResponseFactoryTest {
 
             @Override
             public InputStream getInputStream() {
-                return new ByteArrayInputStream(new byte[]{2, 0, 2, 0});
+                return new ByteArrayInputStream(new byte[]{2, 0, (byte) CommandIds.PONG_COMMAND.ordinal(), 0});
+            }
+
+            @Override
+            public void close() {
+
             }
         };
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);

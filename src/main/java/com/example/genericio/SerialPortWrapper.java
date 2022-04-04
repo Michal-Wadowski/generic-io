@@ -6,4 +6,6 @@ public interface SerialPortWrapper {
     void write(byte[] bytes);
 
     InputStream getInputStream();
+
+    void close();
 }

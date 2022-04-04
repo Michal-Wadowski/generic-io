@@ -8,7 +8,15 @@ public class CommandFactory {
 
     private final SerialPortWrapper serialPortWrapper;
 
-    public GenericCommand ping() {
+    public PingCommand ping() {
         return new PingCommand(serialPortWrapper);
+    }
+
+    public WritePin writePin() {
+        return new WritePin(serialPortWrapper);
+    }
+
+    public ReadPin readPin() {
+        return new ReadPin(serialPortWrapper);
     }
 }

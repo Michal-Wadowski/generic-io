@@ -2,9 +2,9 @@ package com.example.genericio.response;
 
 import java.nio.ByteBuffer;
 
-public class PongResponse extends VoidResponse {
+public class WritePinResponse extends VoidResponse {
 
-    public PongResponse(ByteBuffer byteBuffer) {
+    public WritePinResponse(ByteBuffer byteBuffer) {
         super(byteBuffer);
     }
 
