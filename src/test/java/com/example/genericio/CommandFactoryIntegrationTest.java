@@ -74,34 +74,6 @@ class CommandFactoryIntegrationTest {
     }
 
     @Test
-    void readPin_should_use_real_communication() throws IOException, InterruptedException {
-        // given
-        serialPortWrapper = new SerialPortWrapperImpl(configuration);
-
-        CommandFactory commandFactory = new CommandFactory();
-        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
-
-        // when
-        responseFactory.sendCommand(
-                commandFactory.gpioInit()
-                        .setPort(GPIOC)
-                        .setPin(GPIO_PIN_13)
-                        .setMode(Mode.OUTPUT_PP)
-                        .setPull(PullMode.NOPULL)
-                        .setSpeed(Speed.FREQ_LOW)
-        );
-
-        ReadPinResponse readPinResponseLo = (ReadPinResponse) responseFactory.sendCommand(
-                commandFactory.readPin()
-                        .setPort(GPIOC)
-                        .setPin(GPIO_PIN_13)
-        );
-
-        // then
-        assertThat(readPinResponseLo).isNotNull();
-    }
-
-    @Test
     void writePin_and_readPin_should_use_real_communication() throws IOException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
@@ -110,40 +82,34 @@ class CommandFactoryIntegrationTest {
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // when
-        responseFactory.sendCommand(
+        ReadPinResponse expectedLow = (ReadPinResponse) responseFactory.sendCommands(
                 commandFactory.gpioInit()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
                         .setMode(Mode.OUTPUT_PP)
                         .setPull(PullMode.NOPULL)
-                        .setSpeed(Speed.FREQ_LOW)
-        );
+                        .setSpeed(Speed.FREQ_LOW),
 
-        responseFactory.sendCommand(
                 commandFactory.writePin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-                        .setValue(false)
-        );
+                        .setValue(false),
 
-        ReadPinResponse expectedLow = (ReadPinResponse) responseFactory.sendCommand(
                 commandFactory.readPin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-        );
+        ).get(2);
 
-        responseFactory.sendCommand(
+        ReadPinResponse expectedHigh = (ReadPinResponse) responseFactory.sendCommands(
                 commandFactory.writePin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-                        .setValue(true)
-        );
+                        .setValue(true),
 
-        ReadPinResponse expectedHigh = (ReadPinResponse) responseFactory.sendCommand(
                 commandFactory.readPin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-        );
+        ).get(1);
 
         // then
         assertThat(expectedLow.isSet()).isFalse();
@@ -159,57 +125,49 @@ class CommandFactoryIntegrationTest {
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // when
-        responseFactory.sendCommand(
+        ReadPinResponse expectedLow = (ReadPinResponse) responseFactory.sendCommands(
                 commandFactory.writePin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-                        .setValue(false)
-        );
+                        .setValue(false),
 
-        responseFactory.sendCommand(
                 commandFactory.gpioInit()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
                         .setMode(Mode.OUTPUT_PP)
                         .setPull(PullMode.NOPULL)
-                        .setSpeed(Speed.FREQ_LOW)
-        );
+                        .setSpeed(Speed.FREQ_LOW),
 
-        ReadPinResponse expectedLow = (ReadPinResponse) responseFactory.sendCommand(
                 commandFactory.readPin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-        );
+        ).get(2);
 
-        responseFactory.sendCommand(
+        ReadPinResponse expectedHigh = (ReadPinResponse) responseFactory.sendCommands(
                 commandFactory.gpioInit()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
                         .setMode(Mode.INPUT)
                         .setPull(PullMode.PULLUP)
-                        .setSpeed(Speed.FREQ_LOW)
-        );
+                        .setSpeed(Speed.FREQ_LOW),
 
-        ReadPinResponse expectedHigh = (ReadPinResponse) responseFactory.sendCommand(
                 commandFactory.readPin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-        );
+        ).get(1);
 
-        responseFactory.sendCommand(
+        ReadPinResponse expectedLow2 = (ReadPinResponse) responseFactory.sendCommands(
                 commandFactory.gpioInit()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
                         .setMode(Mode.INPUT)
                         .setPull(PullMode.PULLDOWN)
-                        .setSpeed(Speed.FREQ_LOW)
-        );
+                        .setSpeed(Speed.FREQ_LOW),
 
-        ReadPinResponse expectedLow2 = (ReadPinResponse) responseFactory.sendCommand(
                 commandFactory.readPin()
                         .setPort(GPIOC)
                         .setPin(GPIO_PIN_13)
-        );
+        ).get(1);
 
         // then
         assertThat(expectedLow.isSet()).isFalse();

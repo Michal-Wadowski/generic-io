@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -25,8 +27,11 @@ public class ResponseFactory {
     );
 
     public GenericResponse sendCommand(GenericCommand command) {
-        serialPortWrapper.write(command.getBytes());
-        InputStream inputStream = serialPortWrapper.getInputStream();
+        doSendCommand(command);
+        return fetchResponse(serialPortWrapper.getInputStream());
+    }
+
+    private GenericResponse fetchResponse(InputStream inputStream) {
         try {
             ByteBuffer bytesBuffered;
             bytesBuffered = ByteBuffer.wrap(inputStream.readNBytes(2)).order(ByteOrder.LITTLE_ENDIAN);
@@ -49,5 +54,22 @@ public class ResponseFactory {
         }
 
         return null;
+    }
+
+    private void doSendCommand(GenericCommand command) {
+        serialPortWrapper.write(command.getBytes());
+    }
+
+    public List<GenericResponse> sendCommands(GenericCommand... commands) {
+        for (GenericCommand command : commands) {
+            doSendCommand(command);
+        }
+
+        ArrayList<GenericResponse> responses = new ArrayList<>(commands.length);
+        for (int i = 0; i < commands.length; i++) {
+            InputStream inputStream = serialPortWrapper.getInputStream();
+            responses.add(fetchResponse(inputStream));
+        }
+        return responses;
     }
 }
