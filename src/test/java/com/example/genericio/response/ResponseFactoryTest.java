@@ -2,6 +2,7 @@ package com.example.genericio.response;
 
 import com.example.genericio.SerialPortWrapper;
 import com.example.genericio.command.CommandIds;
+import com.example.genericio.command.GenericCommand;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -32,7 +33,12 @@ class ResponseFactoryTest {
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // where
-        GenericResponse command = responseFactory.getResponse();
+        GenericResponse command = responseFactory.sendCommand(new GenericCommand() {
+            @Override
+            public byte[] getBytes() {
+                return new byte[0];
+            }
+        });
 
         // then
         assertThat(command)

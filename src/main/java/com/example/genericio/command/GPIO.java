@@ -42,22 +42,22 @@ public abstract class GPIO {
     @RequiredArgsConstructor
     @Getter
     public enum Mode {
-        INPUT                        (0x00000000),
-        OUTPUT_PP                    (0x00000001),
-        OUTPUT_OD                    (0x00000011),
-        AF_PP                        (0x00000002),
-        AF_OD                        (0x00000012),
-        AF_INPUT                     (INPUT.ordinal()),
+        INPUT(0x00000000),
+        OUTPUT_PP(0x00000001),
+        OUTPUT_OD(0x00000011),
+        AF_PP(0x00000002),
+        AF_OD(0x00000012),
+        AF_INPUT(INPUT.ordinal()),
 
-        ANALOG                       (0x00000003),
+        ANALOG(0x00000003),
 
-        IT_RISING                    (0x10110000),
-        IT_FALLING                   (0x10210000),
-        IT_RISING_FALLING            (0x10310000),
+        IT_RISING(0x10110000),
+        IT_FALLING(0x10210000),
+        IT_RISING_FALLING(0x10310000),
 
-        EVT_RISING                   (0x10120000),
-        EVT_FALLING                  (0x10220000),
-        EVT_RISING_FALLING           (0x10320000);
+        EVT_RISING(0x10120000),
+        EVT_FALLING(0x10220000),
+        EVT_RISING_FALLING(0x10320000);
 
         public final int value;
     }
@@ -65,9 +65,9 @@ public abstract class GPIO {
     @RequiredArgsConstructor
     @Getter
     public enum PullMode {
-        NOPULL        (0x00000000),
-        PULLUP        (0x00000001),
-        PULLDOWN      (0x00000002);
+        NOPULL(0x00000000),
+        PULLUP(0x00000001),
+        PULLDOWN(0x00000002);
 
         public final int value;
     }
@@ -75,9 +75,9 @@ public abstract class GPIO {
     @RequiredArgsConstructor
     @Getter
     public enum Speed {
-        FREQ_LOW              (0x00000002),
-        FREQ_MEDIUM           (0x00000001),
-        FREQ_HIGH             (0x00000003);
+        FREQ_LOW(0x00000002),
+        FREQ_MEDIUM(0x00000001),
+        FREQ_HIGH(0x00000003);
 
         public final int value;
     }

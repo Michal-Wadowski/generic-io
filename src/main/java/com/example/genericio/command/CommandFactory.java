@@ -1,26 +1,20 @@
 package com.example.genericio.command;
 
-import com.example.genericio.SerialPortWrapper;
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class CommandFactory {
 
-    private final SerialPortWrapper serialPortWrapper;
-
     public PingCommand ping() {
-        return new PingCommand(serialPortWrapper);
+        return new PingCommand();
     }
 
     public WritePin writePin() {
-        return new WritePin(serialPortWrapper);
+        return new WritePin();
     }
 
     public ReadPin readPin() {
-        return new ReadPin(serialPortWrapper);
+        return new ReadPin();
     }
 
     public GpioInit gpioInit() {
-        return new GpioInit(serialPortWrapper);
+        return new GpioInit();
     }
 }
