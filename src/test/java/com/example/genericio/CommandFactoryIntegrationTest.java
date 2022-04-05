@@ -60,8 +60,6 @@ class CommandFactoryIntegrationTest {
     void ping_and_getResponse_should_use_real_communication() throws IOException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-
-        CommandFactory commandFactory = new CommandFactory();
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // when
@@ -77,8 +75,6 @@ class CommandFactoryIntegrationTest {
     void writePin_and_readPin_should_use_real_communication() throws IOException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-
-        CommandFactory commandFactory = new CommandFactory();
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // when
@@ -116,12 +112,10 @@ class CommandFactoryIntegrationTest {
         assertThat(expectedHigh.isSet()).isTrue();
     }
 
-
     @Test
     void gpio_init_should_use_real_communication() throws IOException, InterruptedException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // when
