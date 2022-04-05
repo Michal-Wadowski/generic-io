@@ -5,7 +5,8 @@ import com.example.genericio.SerialPortWrapper;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import static com.example.genericio.command.GPIO.*;
+import static com.example.genericio.command.GPIO.Pin;
+import static com.example.genericio.command.GPIO.Port;
 
 public class ReadPin implements GenericCommand {
 

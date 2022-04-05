@@ -1,7 +1,6 @@
 package com.example.genericio.command;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 @AllArgsConstructor
 public enum CommandIds {
@@ -10,5 +9,7 @@ public enum CommandIds {
     WRITE_PIN,
     WRITE_PIN_OK,
     READ_PIN,
-    READ_PIN_RESULT;
+    READ_PIN_RESULT,
+    GPIO_INIT,
+    GPIO_INIT_OK
 }

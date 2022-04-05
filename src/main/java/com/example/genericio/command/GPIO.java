@@ -1,10 +1,13 @@
 package com.example.genericio.command;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class GPIO {
-    @AllArgsConstructor
+    @RequiredArgsConstructor
     @Getter
     public enum Port {
         GPIOA(0), GPIOB(1), GPIOC(2), GPIOD(3), GPIOE(4);
@@ -12,7 +15,7 @@ public abstract class GPIO {
         public final int value;
     }
 
-    @AllArgsConstructor
+    @RequiredArgsConstructor
     @Getter
     public enum Pin {
         GPIO_PIN_0(0x0001),
@@ -32,6 +35,49 @@ public abstract class GPIO {
         GPIO_PIN_14(0x4000),
         GPIO_PIN_15(0x8000),
         GPIO_PIN_All(0xFFFF);
+
+        public final int value;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum Mode {
+        INPUT                        (0x00000000),
+        OUTPUT_PP                    (0x00000001),
+        OUTPUT_OD                    (0x00000011),
+        AF_PP                        (0x00000002),
+        AF_OD                        (0x00000012),
+        AF_INPUT                     (INPUT.ordinal()),
+
+        ANALOG                       (0x00000003),
+
+        IT_RISING                    (0x10110000),
+        IT_FALLING                   (0x10210000),
+        IT_RISING_FALLING            (0x10310000),
+
+        EVT_RISING                   (0x10120000),
+        EVT_FALLING                  (0x10220000),
+        EVT_RISING_FALLING           (0x10320000);
+
+        public final int value;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum PullMode {
+        NOPULL        (0x00000000),
+        PULLUP        (0x00000001),
+        PULLDOWN      (0x00000002);
+
+        public final int value;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum Speed {
+        FREQ_LOW              (0x00000002),
+        FREQ_MEDIUM           (0x00000001),
+        FREQ_HIGH             (0x00000003);
 
         public final int value;
     }

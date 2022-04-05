@@ -19,7 +19,8 @@ public class ResponseFactory {
     private final Map<Short, Function<ByteBuffer, GenericResponse>> responseCodesMap = Map.of(
             (short)CommandIds.PONG_COMMAND.ordinal(), PongResponse::new,
             (short)CommandIds.WRITE_PIN_OK.ordinal(), WritePinResponse::new,
-            (short)CommandIds.READ_PIN_RESULT.ordinal(), ReadPinResponse::new
+            (short)CommandIds.READ_PIN_RESULT.ordinal(), ReadPinResponse::new,
+            (short)CommandIds.GPIO_INIT_OK.ordinal(), GpioInitResponse::new
     );
 
     public GenericResponse getResponse() {

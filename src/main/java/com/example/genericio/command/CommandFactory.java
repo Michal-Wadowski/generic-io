@@ -19,4 +19,8 @@ public class CommandFactory {
     public ReadPin readPin() {
         return new ReadPin(serialPortWrapper);
     }
+
+    public GpioInit gpioInit() {
+        return new GpioInit(serialPortWrapper);
+    }
 }
