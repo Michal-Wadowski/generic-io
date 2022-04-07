@@ -1,6 +1,8 @@
 package com.example.genericio;
 
-import com.example.genericio.command.CommandFactory;
+import com.example.genericio.command.GpioInit;
+import com.example.genericio.command.ReadPin;
+import com.example.genericio.command.WritePin;
 import com.example.genericio.response.ReadPinResponse;
 import com.example.genericio.response.ResponseFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -18,8 +20,6 @@ import static com.example.genericio.command.GPIO.Port.GPIOC;
 
 @Disabled
 class IntegrationDemo {
-
-    private final CommandFactory commandFactory = new CommandFactory();
 
     private final Configuration configuration = new Configuration() {
         @Override
@@ -49,32 +49,35 @@ class IntegrationDemo {
 
         // when
         responseFactory.sendCommands(
-                commandFactory.gpioInit()
-                        .setPort(GPIOB)
-                        .setPin(GPIO_PIN_12)
-                        .setMode(Mode.INPUT)
-                        .setPull(PullMode.NOPULL)
-                        .setSpeed(Speed.FREQ_LOW),
+                GpioInit.builder()
+                        .port(GPIOB)
+                        .pin(GPIO_PIN_12)
+                        .mode(Mode.INPUT)
+                        .pull(PullMode.NOPULL)
+                        .speed(Speed.FREQ_LOW)
+                        .build(),
 
-                commandFactory.gpioInit()
-                        .setPort(GPIOC)
-                        .setPin(GPIO_PIN_13)
-                        .setMode(Mode.OUTPUT_PP)
-                        .setPull(PullMode.NOPULL)
-                        .setSpeed(Speed.FREQ_LOW)
+                GpioInit.builder()
+                        .port(GPIOC)
+                        .pin(GPIO_PIN_13)
+                        .mode(Mode.OUTPUT_PP)
+                        .pull(PullMode.NOPULL)
+                        .speed(Speed.FREQ_LOW)
+                        .build()
         );
 
         while (true) {
             ReadPinResponse response = (ReadPinResponse) responseFactory.sendCommand(
-                    commandFactory.readPin()
-                            .setPort(GPIOB)
-                            .setPin(GPIO_PIN_12)
+                    ReadPin.builder()
+                            .port(GPIOB)
+                            .pin(GPIO_PIN_12)
+                            .build()
             );
 
             boolean value = response.isSet();
 
             responseFactory.sendCommand(
-                    commandFactory.writePin().setPort(GPIOC).setPin(GPIO_PIN_13).setValue(value)
+                    WritePin.builder().port(GPIOC).pin(GPIO_PIN_13).value(value).build()
             );
 
             System.out.println("B12: " + value);

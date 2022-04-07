@@ -1,9 +1,10 @@
 package com.example.genericio.response;
 
 import com.example.genericio.SerialPortWrapper;
-import com.example.genericio.command.CommandFactory;
 import com.example.genericio.command.CommandIds;
 import com.example.genericio.command.GPIO;
+import com.example.genericio.command.PingCommand;
+import com.example.genericio.command.ReadPin;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -13,8 +14,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ResponseFactoryTest {
-
-    private final CommandFactory commandFactory = new CommandFactory();
 
     @Test
     void should_create_PongResponse_from_value() {
@@ -38,7 +37,7 @@ class ResponseFactoryTest {
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
 
         // where
-        GenericResponse response = responseFactory.sendCommand(commandFactory.ping());
+        GenericResponse response = responseFactory.sendCommand(new PingCommand());
 
         // then
         assertThat(response)
@@ -75,8 +74,8 @@ class ResponseFactoryTest {
 
         // when
         List<GenericResponse> responses = responseFactory.sendCommands(
-                commandFactory.ping(),
-                commandFactory.readPin().setPin(GPIO.Pin.GPIO_PIN_0).setPort(GPIO.Port.GPIOA)
+                new PingCommand(),
+                ReadPin.builder().pin(GPIO.Pin.GPIO_PIN_0).port(GPIO.Port.GPIOA).build()
         );
 
         // then
