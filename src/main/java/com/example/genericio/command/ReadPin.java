@@ -8,9 +8,9 @@ import static com.example.genericio.command.GPIO.Port;
 @Builder
 public class ReadPin extends GenericCommand {
 
-    private Port port;
+    private final Port port;
 
-    private Pin pin;
+    private final Pin pin;
 
     @Override
     public byte[] getBytes() {

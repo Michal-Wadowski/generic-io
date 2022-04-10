@@ -21,9 +21,14 @@ public class ResponseFactory {
 
     private final Map<Short, Function<ByteBuffer, GenericResponse>> responseCodesMap = Map.of(
             (short) CommandIds.PONG_COMMAND.ordinal(), PongResponse::new,
-            (short) CommandIds.WRITE_PIN_OK.ordinal(), WritePinResponse::new,
-            (short) CommandIds.READ_PIN_RESULT.ordinal(), ReadPinResponse::new,
-            (short) CommandIds.GPIO_INIT_OK.ordinal(), GpioInitResponse::new
+            (short) CommandIds.WRITE_PIN_RESPONSE.ordinal(), WritePinResponse::new,
+            (short) CommandIds.READ_PIN_RESPONSE.ordinal(), ReadPinResponse::new,
+            (short) CommandIds.GPIO_INIT_RESPONSE.ordinal(), GpioInitResponse::new,
+            (short) CommandIds.TIM_START_RESPONSE.ordinal(), TimStartResponse::new,
+            (short) CommandIds.TIM_STOP_RESPONSE.ordinal(), TimStopResponse::new,
+            (short) CommandIds.TIM_INIT_RESPONSE.ordinal(), TimInitResponse::new,
+            (short) CommandIds.TIM_DEINIT_RESPONSE.ordinal(), TimDeInitResponse::new,
+            (short) CommandIds.TIM_CONFIG_CHANNEL_RESPONSE.ordinal(), TimConfigChannelResponse::new
     );
 
     public GenericResponse sendCommand(GenericCommand command) {

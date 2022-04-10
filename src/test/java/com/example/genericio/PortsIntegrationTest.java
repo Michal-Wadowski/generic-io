@@ -21,7 +21,7 @@ import static com.example.genericio.command.GPIO.Port.GPIOC;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class CommandsIntegrationTest {
+class PortsIntegrationTest {
 
     private final Configuration configuration = new Configuration() {
         @Override
@@ -58,7 +58,7 @@ class CommandsIntegrationTest {
     }
 
     @Test
-    void ping_and_getResponse_should_use_real_communication() throws IOException {
+    void ping_and_sendCommand_should_use_real_communication() throws IOException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
         ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);

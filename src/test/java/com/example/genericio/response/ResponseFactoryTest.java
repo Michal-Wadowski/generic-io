@@ -61,7 +61,7 @@ class ResponseFactoryTest {
             public InputStream getInputStream() {
                 return new ByteArrayInputStream(new byte[]{
                         2, 0, (byte) CommandIds.PONG_COMMAND.ordinal(), 0,
-                        3, 0, (byte) CommandIds.READ_PIN_RESULT.ordinal(), 0, 0
+                        3, 0, (byte) CommandIds.READ_PIN_RESPONSE.ordinal(), 0, 0
                 });
             }
 

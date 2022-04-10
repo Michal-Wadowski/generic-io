@@ -81,7 +81,7 @@ class IntegrationDemo {
             );
 
             System.out.println("B12: " + value);
-            Thread.sleep(10);
+            Thread.sleep(100);
         }
 
     }

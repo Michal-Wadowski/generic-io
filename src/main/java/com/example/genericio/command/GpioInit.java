@@ -5,15 +5,15 @@ import lombok.Builder;
 @Builder
 public class GpioInit extends GenericCommand {
 
-    private GPIO.Port port;
+    private final GPIO.Port port;
 
-    private GPIO.Pin pin;
+    private final GPIO.Pin pin;
 
-    private GPIO.Mode mode;
+    private final GPIO.Mode mode;
 
-    private GPIO.PullMode pull;
+    private final GPIO.PullMode pull;
 
-    private GPIO.Speed speed;
+    private final GPIO.Speed speed;
 
     @Override
     public byte[] getBytes() {
@@ -21,7 +21,7 @@ public class GpioInit extends GenericCommand {
                 .addByte(port.value)
                 .addShort(pin.value)
                 .addInt(mode.value)
-                .addInt(pull.value)
+                .addInt(pull != null ? pull.value : 0)
                 .addInt(speed.value);
 
         return wrapContentAndGetBytes();

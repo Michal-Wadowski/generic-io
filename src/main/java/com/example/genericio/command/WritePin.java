@@ -8,11 +8,11 @@ import static com.example.genericio.command.GPIO.Port;
 @Builder
 public class WritePin extends GenericCommand {
 
-    private Port port;
+    private final Port port;
 
-    private Pin pin;
+    private final Pin pin;
 
-    private Boolean value;
+    private final Boolean value;
 
     @Override
     public byte[] getBytes() {
