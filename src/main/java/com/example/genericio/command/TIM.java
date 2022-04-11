@@ -8,7 +8,8 @@ public abstract class TIM {
     @RequiredArgsConstructor
     @Getter
     public enum Mode {
-        PWM(0);
+        PWM(0),
+        ENCODER(1);
 
         public final int value;
     }
@@ -17,9 +18,9 @@ public abstract class TIM {
     @Getter
     public enum Timer {
         TIM1(0),
-        Tim2(1),
-        Tim3(2),
-        Tim4(3);
+        TIM2(1),
+        TIM3(2),
+        TIM4(3);
 
         public final int value;
     }
@@ -132,4 +133,47 @@ public abstract class TIM {
 
         public final int value;
     }
+
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum EncoderMode {
+        ENCODERMODE_TI1(0x00000001),
+        ENCODERMODE_TI2(0x00000002),
+        ENCODERMODE_TI12(0x00000001 | 0x00000002);
+
+        public final int value;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum ICPolarity {
+        ICPOLARITY_RISING(0x00000000),
+        ICPOLARITY_FALLING(0x00000002),
+        ICPOLARITY_BOTHEDGE(0x00000002 | 0x00000008);
+
+        public final int value;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum ICSelection {
+        ICSELECTION_DIRECTTI(0x00000001),
+        ICSELECTION_INDIRECTTI(0x00000002),
+        ICSELECTION_TRC(0x00000003);
+
+        public final int value;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum ICPrescaler {
+        ICPSC_DIV1(0x00000000),
+        ICPSC_DIV2(0x00000004),
+        ICPSC_DIV4(0x00000008),
+        ICPSC_DIV8(0x0000000C);
+
+        public final int value;
+    }
+
 }

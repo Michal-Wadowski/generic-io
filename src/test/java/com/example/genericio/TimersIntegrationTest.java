@@ -9,8 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 
-import static com.example.genericio.command.GPIO.Pin.GPIO_PIN_8;
+import static com.example.genericio.command.GPIO.Pin.*;
 import static com.example.genericio.command.GPIO.Port;
+import static com.example.genericio.command.TIM.EncoderMode.ENCODERMODE_TI1;
+import static com.example.genericio.command.TIM.ICPolarity.ICPOLARITY_RISING;
+import static com.example.genericio.command.TIM.ICPrescaler.*;
+import static com.example.genericio.command.TIM.ICSelection.ICSELECTION_DIRECTTI;
 import static com.example.genericio.command.TIM.OCMode.PWM1;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -35,6 +39,19 @@ class TimersIntegrationTest {
     void tearDown() {
         timPwmStop(commandsExecutor);
         timPwmDeinit(commandsExecutor);
+
+        commandsExecutor.sendCommands(
+                TimStop.builder()
+                        .mode(TIM.Mode.ENCODER)
+                        .timer(TIM.Timer.TIM2)
+                        .channel(TIM.Channel.CHANNEL_ALL)
+                        .build(),
+
+                TimDeInit.builder()
+                        .mode(TIM.Mode.ENCODER)
+                        .timer(TIM.Timer.TIM2)
+                        .build()
+        );
 
         commandsExecutor.sendCommands(
 
@@ -204,6 +221,116 @@ class TimersIntegrationTest {
         assertThat(secondRead.getValue()).isGreaterThan(firstRead.getValue());
     }
 
+    @Test
+    void encoder_should_count() throws InterruptedException {
+        // given
+        commandsExecutor.sendCommands(
+                TimInit.builder()
+                        .mode(TIM.Mode.ENCODER)
+                        .timer(TIM.Timer.TIM2)
+                        .prescaler(0)
+                        .counterMode(TIM.CounterMode.UP)
+                        .period(0xffff)
+                        .clockDivision(TIM.ClockDivision.DIV1)
+                        .autoReloadPreload(TIM.AutoReload.PRELOAD_DISABLE)
+
+                        .encoderMode(ENCODERMODE_TI1)
+                        .ic1Polarity(ICPOLARITY_RISING)
+                        .ic1Selection(ICSELECTION_DIRECTTI)
+                        .ic1Prescaler(ICPSC_DIV1)
+                        .ic1Filter(0)
+                        .ic2Polarity(ICPOLARITY_RISING)
+                        .ic2Selection(ICSELECTION_DIRECTTI)
+                        .ic2Prescaler(ICPSC_DIV1)
+                        .ic2Filter(0)
+                        .build(),
+
+                GpioInit.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_0)
+                        .mode(GPIO.Mode.OUTPUT_PP)
+                        .speed(GPIO.Speed.FREQ_LOW)
+                        .build(),
+
+                GpioInit.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_1)
+                        .mode(GPIO.Mode.OUTPUT_PP)
+                        .speed(GPIO.Speed.FREQ_LOW)
+                        .build()
+        );
+
+        commandsExecutor.sendCommand(
+                TimStart.builder()
+                        .mode(TIM.Mode.ENCODER)
+                        .timer(TIM.Timer.TIM2)
+                        .channel(TIM.Channel.CHANNEL_ALL)
+                        .build()
+        );
+
+        commandsExecutor.sendCommands(
+                WritePin.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_0)
+                        .value(false)
+                        .build(),
+
+                WritePin.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_1)
+                        .value(false)
+                        .build()
+        );
+
+        // when
+        TimInstanceReadResponse readFirst = (TimInstanceReadResponse) commandsExecutor.sendCommand(
+                TimInstanceRead.builder()
+                        .timer(TIM.Timer.TIM2)
+                        .command(TimInstanceRead.Command.GET_COUNTER)
+                        .build()
+        );
+
+        commandsExecutor.sendCommands(
+                WritePin.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_0)
+                        .value(true)
+                        .build(),
+
+                WritePin.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_1)
+                        .value(true)
+                        .build(),
+
+                WritePin.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_0)
+                        .value(false)
+                        .build(),
+
+                WritePin.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_1)
+                        .value(false)
+                        .build()
+        );
+
+        TimInstanceReadResponse readSecond = (TimInstanceReadResponse) commandsExecutor.sendCommand(
+                TimInstanceRead.builder()
+                        .timer(TIM.Timer.TIM2)
+                        .command(TimInstanceRead.Command.GET_COUNTER)
+                        .build()
+        );
+
+        // then
+        assertThat(readSecond.getValue()).isGreaterThan(readFirst.getValue());
+
+    }
+
+
+
+
     private void timPwmStop(CommandsExecutor commandsExecutor) {
         commandsExecutor.sendCommand(
                 TimStop.builder().mode(TIM.Mode.PWM).timer(TIM.Timer.TIM1).channel(TIM.Channel.CHANNEL_1).build()
@@ -227,7 +354,7 @@ class TimersIntegrationTest {
                 TimInit.builder()
                         .mode(TIM.Mode.PWM)
                         .timer(TIM.Timer.TIM1)
-                        .prescaler(48 - 1)
+                        .prescaler(10*48 - 1)
                         .counterMode(TIM.CounterMode.UP)
                         .period(1000 - 1)
                         .clockDivision(TIM.ClockDivision.DIV1)

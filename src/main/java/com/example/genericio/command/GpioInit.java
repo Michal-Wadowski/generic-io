@@ -22,7 +22,7 @@ public class GpioInit extends GenericCommand {
                 .addShort(pin.value)
                 .addInt(mode.value)
                 .addInt(pull != null ? pull.value : 0)
-                .addInt(speed.value);
+                .addInt(speed != null ? speed.value : 0);
 
         return wrapContentAndGetBytes();
     }
