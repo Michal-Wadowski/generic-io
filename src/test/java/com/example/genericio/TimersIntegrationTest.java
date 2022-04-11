@@ -91,6 +91,93 @@ class TimersIntegrationTest {
         assertThat(pwmOk).isFalse();
     }
 
+    @Test
+    void instance_update() throws InterruptedException {
+        // given
+        commandsExecutor.sendCommands(
+                TimInit.builder()
+                        .mode(TIM.Mode.PWM)
+                        .timer(TIM.Timer.TIM1)
+                        .prescaler(100*48 - 1)
+                        .counterMode(TIM.CounterMode.UP)
+                        .period(1000 - 1)
+                        .clockDivision(TIM.ClockDivision.DIV1)
+                        .repetitionCounter(0)
+                        .autoReloadPreload(TIM.AutoReload.PRELOAD_DISABLE)
+                        .build(),
+
+                TimConfigChannel.builder()
+                        .mode(TIM.Mode.PWM)
+                        .timer(TIM.Timer.TIM1)
+                        .channel(TIM.Channel.CHANNEL_1)
+                        .ocMode(PWM1)
+                        .pulse(500)
+                        .ocPolarity(TIM.OCPolarity.HIGH)
+                        .ocnPolarity(TIM.OCNPolarity.HIGH)
+                        .ocFastMode(TIM.OCFastMode.DISABLE)
+                        .ocIdleState(TIM.OCIdleState.RESET)
+                        .ocnIdleState(TIM.OCNIdleState.RESET)
+                        .build(),
+
+                GpioInit.builder()
+                        .port(Port.GPIOA)
+                        .pin(GPIO_PIN_8)
+                        .mode(GPIO.Mode.AF_PP)
+                        .speed(GPIO.Speed.FREQ_LOW)
+                        .build()
+        );
+        timPwmStart(commandsExecutor);
+
+        // when
+        commandsExecutor.sendCommands(
+                TimInstanceUpdate.builder()
+                        .timer(TIM.Timer.TIM1)
+                        .command(TimInstanceUpdate.Command.SET_AUTORELOAD)
+                        .value(0xffff)
+                        .build(),
+
+                TimInstanceUpdate.builder()
+                        .timer(TIM.Timer.TIM1)
+                        .command(TimInstanceUpdate.Command.SET_COMPARE)
+                        .channel(TIM.Channel.CHANNEL_1)
+                        .value(0xffff / 2)
+                        .build(),
+
+                TimInstanceUpdate.builder()
+                        .timer(TIM.Timer.TIM1)
+                        .command(TimInstanceUpdate.Command.SET_COUNTER)
+                        .channel(TIM.Channel.CHANNEL_1)
+                        .value(0)
+                        .build()
+        );
+
+        Thread.sleep(10);
+
+        ReadPinResponse expectedHigh =
+                (ReadPinResponse) commandsExecutor.sendCommand(ReadPin.builder().port(Port.GPIOA).pin(GPIO_PIN_8).build());
+
+
+        // when
+        commandsExecutor.sendCommands(
+                TimInstanceUpdate.builder()
+                        .timer(TIM.Timer.TIM1)
+                        .command(TimInstanceUpdate.Command.SET_COUNTER)
+                        .channel(TIM.Channel.CHANNEL_1)
+                        .value(0xffff / 2 + 1)
+                        .build()
+        );
+
+        Thread.sleep(10);
+
+        ReadPinResponse expectedLow =
+                (ReadPinResponse) commandsExecutor.sendCommand(ReadPin.builder().port(Port.GPIOA).pin(GPIO_PIN_8).build());
+
+
+        // then
+        assertThat(expectedHigh.isSet()).isTrue();
+        assertThat(expectedLow.isSet()).isFalse();
+    }
+
     private void timPwmStop(CommandsExecutor commandsExecutor) {
         commandsExecutor.sendCommand(
                 TimStop.builder().mode(TIM.Mode.PWM).timer(TIM.Timer.TIM1).channel(TIM.Channel.CHANNEL_1).build()
@@ -111,12 +198,10 @@ class TimersIntegrationTest {
 
     private void timPwmInit(CommandsExecutor commandsExecutor) {
         commandsExecutor.sendCommands(
-
-
                 TimInit.builder()
                         .mode(TIM.Mode.PWM)
                         .timer(TIM.Timer.TIM1)
-                        .prescaler(64 - 1)
+                        .prescaler(48 - 1)
                         .counterMode(TIM.CounterMode.UP)
                         .period(1000 - 1)
                         .clockDivision(TIM.ClockDivision.DIV1)

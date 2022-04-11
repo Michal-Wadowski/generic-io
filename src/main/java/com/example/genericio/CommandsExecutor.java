@@ -29,7 +29,8 @@ public class CommandsExecutor {
             (short) CommandIds.TIM_STOP_RESPONSE.ordinal(), TimStopResponse::new,
             (short) CommandIds.TIM_INIT_RESPONSE.ordinal(), TimInitResponse::new,
             (short) CommandIds.TIM_DEINIT_RESPONSE.ordinal(), TimDeInitResponse::new,
-            (short) CommandIds.TIM_CONFIG_CHANNEL_RESPONSE.ordinal(), TimConfigChannelResponse::new
+            (short) CommandIds.TIM_CONFIG_CHANNEL_RESPONSE.ordinal(), TimConfigChannelResponse::new,
+            (short) CommandIds.TIM_INSTANCE_UPDATE_RESPONSE.ordinal(), TimInstanceUpdateResponse::new
     );
 
     public GenericResponse sendCommand(GenericCommand command) {
