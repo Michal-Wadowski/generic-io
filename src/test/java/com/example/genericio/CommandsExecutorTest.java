@@ -1,10 +1,13 @@
-package com.example.genericio.response;
+package com.example.genericio;
 
+import com.example.genericio.CommandsExecutor;
 import com.example.genericio.SerialPortWrapper;
 import com.example.genericio.command.CommandIds;
 import com.example.genericio.command.GPIO;
 import com.example.genericio.command.PingCommand;
 import com.example.genericio.command.ReadPin;
+import com.example.genericio.response.GenericResponse;
+import com.example.genericio.response.PongResponse;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -13,7 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ResponseFactoryTest {
+class CommandsExecutorTest {
 
     @Test
     void should_create_PongResponse_from_value() {
@@ -34,10 +37,10 @@ class ResponseFactoryTest {
 
             }
         };
-        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
+        CommandsExecutor commandsExecutor = new CommandsExecutor(serialPortWrapper);
 
         // where
-        GenericResponse response = responseFactory.sendCommand(new PingCommand());
+        GenericResponse response = commandsExecutor.sendCommand(new PingCommand());
 
         // then
         assertThat(response)
@@ -70,10 +73,10 @@ class ResponseFactoryTest {
 
             }
         };
-        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
+        CommandsExecutor commandsExecutor = new CommandsExecutor(serialPortWrapper);
 
         // when
-        List<GenericResponse> responses = responseFactory.sendCommands(
+        List<GenericResponse> responses = commandsExecutor.sendCommands(
                 new PingCommand(),
                 ReadPin.builder().pin(GPIO.Pin.GPIO_PIN_0).port(GPIO.Port.GPIOA).build()
         );

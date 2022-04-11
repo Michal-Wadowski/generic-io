@@ -7,7 +7,6 @@ import com.example.genericio.command.WritePin;
 import com.example.genericio.response.GenericResponse;
 import com.example.genericio.response.PongResponse;
 import com.example.genericio.response.ReadPinResponse;
-import com.example.genericio.response.ResponseFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,10 +60,10 @@ class PortsIntegrationTest {
     void ping_and_sendCommand_should_use_real_communication() throws IOException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
+        CommandsExecutor commandsExecutor = new CommandsExecutor(serialPortWrapper);
 
         // when
-        GenericResponse response = responseFactory.sendCommand(new PingCommand());
+        GenericResponse response = commandsExecutor.sendCommand(new PingCommand());
 
         // then
         assertThat(response)
@@ -76,10 +75,10 @@ class PortsIntegrationTest {
     void writePin_and_readPin_should_use_real_communication() throws IOException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
+        CommandsExecutor commandsExecutor = new CommandsExecutor(serialPortWrapper);
 
         // when
-        ReadPinResponse expectedLow = (ReadPinResponse) responseFactory.sendCommands(
+        ReadPinResponse expectedLow = (ReadPinResponse) commandsExecutor.sendCommands(
                 GpioInit.builder()
                         .port(GPIOC)
                         .pin(GPIO_PIN_13)
@@ -100,7 +99,7 @@ class PortsIntegrationTest {
                         .build()
         ).get(2);
 
-        ReadPinResponse expectedHigh = (ReadPinResponse) responseFactory.sendCommands(
+        ReadPinResponse expectedHigh = (ReadPinResponse) commandsExecutor.sendCommands(
                 WritePin.builder()
                         .port(GPIOC)
                         .pin(GPIO_PIN_13)
@@ -122,10 +121,10 @@ class PortsIntegrationTest {
     void gpio_init_should_use_real_communication() throws IOException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
+        CommandsExecutor commandsExecutor = new CommandsExecutor(serialPortWrapper);
 
         // when
-        ReadPinResponse expectedLow = (ReadPinResponse) responseFactory.sendCommands(
+        ReadPinResponse expectedLow = (ReadPinResponse) commandsExecutor.sendCommands(
                 WritePin.builder()
                         .port(GPIOC)
                         .pin(GPIO_PIN_13)
@@ -146,7 +145,7 @@ class PortsIntegrationTest {
                         .build()
         ).get(2);
 
-        ReadPinResponse expectedHigh = (ReadPinResponse) responseFactory.sendCommands(
+        ReadPinResponse expectedHigh = (ReadPinResponse) commandsExecutor.sendCommands(
                 GpioInit.builder()
                         .port(GPIOC)
                         .pin(GPIO_PIN_13)
@@ -161,7 +160,7 @@ class PortsIntegrationTest {
                         .build()
         ).get(1);
 
-        ReadPinResponse expectedLow2 = (ReadPinResponse) responseFactory.sendCommands(
+        ReadPinResponse expectedLow2 = (ReadPinResponse) commandsExecutor.sendCommands(
                 GpioInit.builder()
                         .port(GPIOC)
                         .pin(GPIO_PIN_13)

@@ -1,8 +1,9 @@
-package com.example.genericio.response;
+package com.example.genericio;
 
 import com.example.genericio.SerialPortWrapper;
 import com.example.genericio.command.CommandIds;
 import com.example.genericio.command.GenericCommand;
+import com.example.genericio.response.*;
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @AllArgsConstructor
-public class ResponseFactory {
+public class CommandsExecutor {
 
     private final SerialPortWrapper serialPortWrapper;
 

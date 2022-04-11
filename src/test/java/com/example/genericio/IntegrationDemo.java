@@ -4,7 +4,6 @@ import com.example.genericio.command.GpioInit;
 import com.example.genericio.command.ReadPin;
 import com.example.genericio.command.WritePin;
 import com.example.genericio.response.ReadPinResponse;
-import com.example.genericio.response.ResponseFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -45,10 +44,10 @@ class IntegrationDemo {
     void show_pin_state() throws IOException, InterruptedException {
         // given
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-        ResponseFactory responseFactory = new ResponseFactory(serialPortWrapper);
+        CommandsExecutor commandsExecutor = new CommandsExecutor(serialPortWrapper);
 
         // when
-        responseFactory.sendCommands(
+        commandsExecutor.sendCommands(
                 GpioInit.builder()
                         .port(GPIOB)
                         .pin(GPIO_PIN_12)
@@ -67,7 +66,7 @@ class IntegrationDemo {
         );
 
         while (true) {
-            ReadPinResponse response = (ReadPinResponse) responseFactory.sendCommand(
+            ReadPinResponse response = (ReadPinResponse) commandsExecutor.sendCommand(
                     ReadPin.builder()
                             .port(GPIOB)
                             .pin(GPIO_PIN_12)
@@ -76,7 +75,7 @@ class IntegrationDemo {
 
             boolean value = response.isSet();
 
-            responseFactory.sendCommand(
+            commandsExecutor.sendCommand(
                     WritePin.builder().port(GPIOC).pin(GPIO_PIN_13).value(value).build()
             );
 

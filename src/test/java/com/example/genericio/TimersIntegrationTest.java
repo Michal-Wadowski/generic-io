@@ -2,7 +2,6 @@ package com.example.genericio;
 
 import com.example.genericio.command.*;
 import com.example.genericio.response.ReadPinResponse;
-import com.example.genericio.response.ResponseFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import java.io.FileNotFoundException;
 import static com.example.genericio.command.GPIO.Pin.GPIO_PIN_8;
 import static com.example.genericio.command.GPIO.Port;
 import static com.example.genericio.command.TIM.OCMode.PWM1;
-import static com.example.genericio.command.TIM.OCPolarity.HIGH;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class TimersIntegrationTest {
@@ -24,20 +22,20 @@ class TimersIntegrationTest {
         }
     };
     private SerialPortWrapper serialPortWrapper;
-    private ResponseFactory responseFactory;
+    private CommandsExecutor commandsExecutor;
 
     @BeforeEach
     void setUp() throws FileNotFoundException {
         serialPortWrapper = new SerialPortWrapperImpl(configuration);
-        responseFactory = new ResponseFactory(serialPortWrapper);
+        commandsExecutor = new CommandsExecutor(serialPortWrapper);
     }
 
     @AfterEach
     void tearDown() {
-        timPwmStop(responseFactory);
-        timPwmDeinit(responseFactory);
+        timPwmStop(commandsExecutor);
+        timPwmDeinit(commandsExecutor);
 
-        responseFactory.sendCommands(
+        commandsExecutor.sendCommands(
 
                 GpioInit.builder()
                         .port(Port.GPIOA)
@@ -55,64 +53,64 @@ class TimersIntegrationTest {
         // given
 
         // when
-        timPwmInit(responseFactory);
-        timPwmStart(responseFactory);
+        timPwmInit(commandsExecutor);
+        timPwmStart(commandsExecutor);
 
         // then
-        boolean pwmOk = isPwmRunning(responseFactory);
+        boolean pwmOk = isPwmRunning(commandsExecutor);
         assertThat(pwmOk).isTrue();
     }
 
     @Test
     void should_stop_pwm_after_timDeInit() throws InterruptedException {
         // given
-        timPwmInit(responseFactory);
-        timPwmStart(responseFactory);
-        isPwmRunning(responseFactory);
+        timPwmInit(commandsExecutor);
+        timPwmStart(commandsExecutor);
+        isPwmRunning(commandsExecutor);
 
         // when
-        timPwmDeinit(responseFactory);
+        timPwmDeinit(commandsExecutor);
 
         // then
-        boolean pwmOk = isPwmRunning(responseFactory);
+        boolean pwmOk = isPwmRunning(commandsExecutor);
         assertThat(pwmOk).isFalse();
     }
 
     @Test
     void should_stop_pwm_after_timStop() throws InterruptedException {
         // given
-        timPwmInit(responseFactory);
-        timPwmStart(responseFactory);
+        timPwmInit(commandsExecutor);
+        timPwmStart(commandsExecutor);
 
         // when
-        isPwmRunning(responseFactory);
-        timPwmStop(responseFactory);
+        isPwmRunning(commandsExecutor);
+        timPwmStop(commandsExecutor);
 
         // then
-        boolean pwmOk = isPwmRunning(responseFactory);
+        boolean pwmOk = isPwmRunning(commandsExecutor);
         assertThat(pwmOk).isFalse();
     }
 
-    private void timPwmStop(ResponseFactory responseFactory) {
-        responseFactory.sendCommand(
+    private void timPwmStop(CommandsExecutor commandsExecutor) {
+        commandsExecutor.sendCommand(
                 TimStop.builder().mode(TIM.Mode.PWM).timer(TIM.Timer.TIM1).channel(TIM.Channel.CHANNEL_1).build()
         );
     }
 
-    private void timPwmDeinit(ResponseFactory responseFactory) {
-        responseFactory.sendCommand(
+    private void timPwmDeinit(CommandsExecutor commandsExecutor) {
+        commandsExecutor.sendCommand(
                 TimDeInit.builder().mode(TIM.Mode.PWM).timer(TIM.Timer.TIM1).build()
         );
     }
 
-    private void timPwmStart(ResponseFactory responseFactory) {
-        responseFactory.sendCommand(
+    private void timPwmStart(CommandsExecutor commandsExecutor) {
+        commandsExecutor.sendCommand(
                 TimStart.builder().mode(TIM.Mode.PWM).timer(TIM.Timer.TIM1).channel(TIM.Channel.CHANNEL_1).build()
         );
     }
 
-    private void timPwmInit(ResponseFactory responseFactory) {
-        responseFactory.sendCommands(
+    private void timPwmInit(CommandsExecutor commandsExecutor) {
+        commandsExecutor.sendCommands(
 
 
                 TimInit.builder()
@@ -148,12 +146,12 @@ class TimersIntegrationTest {
         );
     }
 
-    private boolean isPwmRunning(ResponseFactory responseFactory) throws InterruptedException {
+    private boolean isPwmRunning(CommandsExecutor commandsExecutor) throws InterruptedException {
         boolean first = false;
         boolean pwmOk = false;
         for (int i = 0; i < 50; i++) {
             ReadPinResponse genericResponse =
-                    (ReadPinResponse) responseFactory.sendCommand(
+                    (ReadPinResponse) commandsExecutor.sendCommand(
                             ReadPin.builder().port(Port.GPIOA).pin(GPIO_PIN_8).build()
                     );
 
