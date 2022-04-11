@@ -6,6 +6,7 @@ import com.example.genericio.command.CommandIds;
 import com.example.genericio.command.GPIO;
 import com.example.genericio.command.PingCommand;
 import com.example.genericio.command.ReadPin;
+import com.example.genericio.response.CommandResponseIds;
 import com.example.genericio.response.GenericResponse;
 import com.example.genericio.response.PongResponse;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class CommandsExecutorTest {
 
             @Override
             public InputStream getInputStream() {
-                return new ByteArrayInputStream(new byte[]{2, 0, (byte) CommandIds.PONG_COMMAND.ordinal(), 0});
+                return new ByteArrayInputStream(new byte[]{2, 0, (byte) CommandResponseIds.PONG_COMMAND.ordinal(), 0});
             }
 
             @Override
@@ -63,8 +64,8 @@ class CommandsExecutorTest {
             @Override
             public InputStream getInputStream() {
                 return new ByteArrayInputStream(new byte[]{
-                        2, 0, (byte) CommandIds.PONG_COMMAND.ordinal(), 0,
-                        3, 0, (byte) CommandIds.READ_PIN_RESPONSE.ordinal(), 0, 0
+                        2, 0, (byte) CommandResponseIds.PONG_COMMAND.ordinal(), 0,
+                        3, 0, (byte) CommandResponseIds.READ_PIN_RESPONSE.ordinal(), 0, 0
                 });
             }
 

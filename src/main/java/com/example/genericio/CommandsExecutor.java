@@ -20,17 +20,18 @@ public class CommandsExecutor {
 
     private final SerialPortWrapper serialPortWrapper;
 
-    private final Map<Short, Function<ByteBuffer, GenericResponse>> responseCodesMap = Map.of(
-            (short) CommandIds.PONG_COMMAND.ordinal(), PongResponse::new,
-            (short) CommandIds.WRITE_PIN_RESPONSE.ordinal(), WritePinResponse::new,
-            (short) CommandIds.READ_PIN_RESPONSE.ordinal(), ReadPinResponse::new,
-            (short) CommandIds.GPIO_INIT_RESPONSE.ordinal(), GpioInitResponse::new,
-            (short) CommandIds.TIM_START_RESPONSE.ordinal(), TimStartResponse::new,
-            (short) CommandIds.TIM_STOP_RESPONSE.ordinal(), TimStopResponse::new,
-            (short) CommandIds.TIM_INIT_RESPONSE.ordinal(), TimInitResponse::new,
-            (short) CommandIds.TIM_DEINIT_RESPONSE.ordinal(), TimDeInitResponse::new,
-            (short) CommandIds.TIM_CONFIG_CHANNEL_RESPONSE.ordinal(), TimConfigChannelResponse::new,
-            (short) CommandIds.TIM_INSTANCE_UPDATE_RESPONSE.ordinal(), TimInstanceUpdateResponse::new
+    private final Map<Short, Function<ByteBuffer, GenericResponse>> responseCodesMap = Map.ofEntries(
+            Map.entry((short) CommandResponseIds.PONG_COMMAND.ordinal(), PongResponse::new),
+            Map.entry((short) CommandResponseIds.WRITE_PIN_RESPONSE.ordinal(), WritePinResponse::new),
+            Map.entry((short) CommandResponseIds.READ_PIN_RESPONSE.ordinal(), ReadPinResponse::new),
+            Map.entry((short) CommandResponseIds.GPIO_INIT_RESPONSE.ordinal(), GpioInitResponse::new),
+            Map.entry((short) CommandResponseIds.TIM_START_RESPONSE.ordinal(), TimStartResponse::new),
+            Map.entry((short) CommandResponseIds.TIM_STOP_RESPONSE.ordinal(), TimStopResponse::new),
+            Map.entry((short) CommandResponseIds.TIM_INIT_RESPONSE.ordinal(), TimInitResponse::new),
+            Map.entry((short) CommandResponseIds.TIM_DEINIT_RESPONSE.ordinal(), TimDeInitResponse::new),
+            Map.entry((short) CommandResponseIds.TIM_CONFIG_CHANNEL_RESPONSE.ordinal(), TimConfigChannelResponse::new),
+            Map.entry((short) CommandResponseIds.TIM_INSTANCE_UPDATE_RESPONSE.ordinal(), TimInstanceUpdateResponse::new),
+            Map.entry((short) CommandResponseIds.TIM_INSTANCE_READ_RESPONSE.ordinal(), TimInstanceReadResponse::new)
     );
 
     public GenericResponse sendCommand(GenericCommand command) {

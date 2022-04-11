@@ -7,10 +7,10 @@ import lombok.NonNull;
 public class TimInstanceUpdate extends GenericCommand {
 
     @NonNull
-    private final Command command;
+    private final TIM.Timer timer;
 
     @NonNull
-    private final TIM.Timer timer;
+    private final Command command;
 
     private final TIM.Channel channel;
 

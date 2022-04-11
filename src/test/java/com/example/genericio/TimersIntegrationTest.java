@@ -2,6 +2,7 @@ package com.example.genericio;
 
 import com.example.genericio.command.*;
 import com.example.genericio.response.ReadPinResponse;
+import com.example.genericio.response.TimInstanceReadResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -176,6 +177,31 @@ class TimersIntegrationTest {
         // then
         assertThat(expectedHigh.isSet()).isTrue();
         assertThat(expectedLow.isSet()).isFalse();
+    }
+
+    @Test
+    void instance_read() throws InterruptedException {
+        // given
+        timPwmInit(commandsExecutor);
+        timPwmStart(commandsExecutor);
+
+        // when
+        TimInstanceReadResponse firstRead = (TimInstanceReadResponse) commandsExecutor.sendCommand(
+                TimInstanceRead.builder()
+                        .timer(TIM.Timer.TIM1)
+                        .command(TimInstanceRead.Command.GET_COUNTER)
+                        .build()
+        );
+
+        TimInstanceReadResponse secondRead = (TimInstanceReadResponse) commandsExecutor.sendCommand(
+                TimInstanceRead.builder()
+                        .timer(TIM.Timer.TIM1)
+                        .command(TimInstanceRead.Command.GET_COUNTER)
+                        .build()
+        );
+
+        // then
+        assertThat(secondRead.getValue()).isGreaterThan(firstRead.getValue());
     }
 
     private void timPwmStop(CommandsExecutor commandsExecutor) {
