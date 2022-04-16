@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.stream.IntStream;
 
 import static com.example.genericio.command.Adc.Channel.ADC_CHANNEL_0;
+import static com.example.genericio.command.Adc.Channel.ADC_CHANNEL_1;
 import static com.example.genericio.command.Adc.Rank.ADC_REGULAR_RANK_1;
 import static com.example.genericio.command.Adc.SamplingTime.ADC_SAMPLETIME_239CYCLES_5;
 import static com.example.genericio.command.DMA.Direction.PERIPH_TO_MEMORY;
@@ -20,6 +21,7 @@ import static com.example.genericio.command.DMA.PeriphDataAlignment.PDATAALIGN_H
 import static com.example.genericio.command.DMA.PeriphInc.PINC_DISABLE;
 import static com.example.genericio.command.DMA.Priority.PRIORITY_LOW;
 import static com.example.genericio.command.GPIO.Pin.GPIO_PIN_0;
+import static com.example.genericio.command.GPIO.Pin.GPIO_PIN_1;
 import static com.example.genericio.command.GPIO.Port.GPIOA;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -95,6 +97,51 @@ public class AdcIntegrationTest {
         // then
         assertThat(averageLow)
                 .isLessThan(100);
+    }
+
+    @Test
+    void expect_high_after_channel_reconfigure() throws InterruptedException {
+        // given
+        adcCommonInit();
+
+        commandsExecutor.sendCommands(
+                GpioInit.builder()
+                        .port(GPIOA)
+                        .pin(GPIO_PIN_1)
+                        .mode(GPIO.Mode.OUTPUT_PP)
+                        .speed(GPIO.Speed.FREQ_LOW)
+                        .build(),
+
+                WritePin.builder()
+                        .port(GPIOA)
+                        .pin(GPIO_PIN_0)
+                        .value(false)
+                        .build(),
+
+                WritePin.builder()
+                        .port(GPIOA)
+                        .pin(GPIO_PIN_1)
+                        .value(true)
+                        .build()
+        );
+
+        // when
+        commandsExecutor.sendCommands(
+                AdcConfigChannel.builder()
+                        .instance(Adc.Instance.ADC1)
+                        .channel(ADC_CHANNEL_1)
+                        .rank(ADC_REGULAR_RANK_1)
+                        .samplingTime(ADC_SAMPLETIME_239CYCLES_5)
+                        .build()
+        );
+
+
+        Thread.sleep(10);
+        double averageHigh = getAveragedAdcResponse();
+
+        // then
+        assertThat(averageHigh)
+                .isGreaterThan(4000);
     }
 
     private void adcCommonInit() {
