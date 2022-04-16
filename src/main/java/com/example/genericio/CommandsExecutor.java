@@ -1,7 +1,5 @@
 package com.example.genericio;
 
-import com.example.genericio.SerialPortWrapper;
-import com.example.genericio.command.CommandIds;
 import com.example.genericio.command.GenericCommand;
 import com.example.genericio.response.*;
 import lombok.AllArgsConstructor;
@@ -31,7 +29,14 @@ public class CommandsExecutor {
             Map.entry((short) CommandResponseIds.TIM_DEINIT_RESPONSE.ordinal(), TimDeInitResponse::new),
             Map.entry((short) CommandResponseIds.TIM_CONFIG_CHANNEL_RESPONSE.ordinal(), TimConfigChannelResponse::new),
             Map.entry((short) CommandResponseIds.TIM_INSTANCE_UPDATE_RESPONSE.ordinal(), TimInstanceUpdateResponse::new),
-            Map.entry((short) CommandResponseIds.TIM_INSTANCE_READ_RESPONSE.ordinal(), TimInstanceReadResponse::new)
+            Map.entry((short) CommandResponseIds.TIM_INSTANCE_READ_RESPONSE.ordinal(), TimInstanceReadResponse::new),
+            Map.entry((short) CommandResponseIds.DMA_INIT_RESPONSE.ordinal(), DmaInitResponse::new),
+            Map.entry((short) CommandResponseIds.ADC_INIT_RESPONSE.ordinal(), AdcInitResponse::new),
+            Map.entry((short) CommandResponseIds.ADC_CONFIG_CHANNEL_RESPONSE.ordinal(), AdcConfigChannelResponse::new),
+            Map.entry((short) CommandResponseIds.ADC_START_RESPONSE.ordinal(), AdcStartResponse::new),
+            Map.entry((short) CommandResponseIds.NVIC_SET_PRIORITY_RESPONSE.ordinal(), NVICSetPriorityResponse::new),
+            Map.entry((short) CommandResponseIds.NVIC_ENABLE_IRQ_RESPONSE.ordinal(), NvocEnableIrqResponse::new),
+            Map.entry((short) CommandResponseIds.COMMAND_UTILS_RESPONSE.ordinal(), CommandUtilsResponse::new)
     );
 
     public GenericResponse sendCommand(GenericCommand command) {

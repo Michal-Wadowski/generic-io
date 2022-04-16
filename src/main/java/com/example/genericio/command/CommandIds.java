@@ -24,5 +24,19 @@ public enum CommandIds {
 
     TIM_INSTANCE_UPDATE,
 
-    TIM_INSTANCE_READ
+    TIM_INSTANCE_READ,
+
+    DMA_INIT,
+
+    ADC_INIT,
+
+    ADC_CONFIG_CHANNEL,
+
+    ADC_START,
+
+    NVIC_SET_PRIORITY,
+
+    NVIC_ENABLE_IRQ,
+
+    COMMAND_UTILS
 }
