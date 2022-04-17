@@ -175,17 +175,6 @@ public class AdcIntegrationTest {
                         .enable(true)
                         .build(),
 
-                DmaInit.builder()
-                        .instance(DMA.Instance.DMA1_Channel1)
-                        .direction(PERIPH_TO_MEMORY)
-                        .periphInc(PINC_DISABLE)
-                        .memInc(MINC_ENABLE)
-                        .periphDataAlignment(PDATAALIGN_HALFWORD)
-                        .memDataAlignment(MDATAALIGN_HALFWORD)
-                        .mode(CIRCULAR)
-                        .priority(PRIORITY_LOW)
-                        .build(),
-
                 AdcInit.builder()
                         .instance(Adc.Instance.ADC1)
                         .scanConvMode(Adc.ScanConvMode.SCAN_DISABLE)
@@ -209,6 +198,7 @@ public class AdcIntegrationTest {
                         .instance(Adc.Instance.ADC1)
                         .mode(AdcStart.Mode.ADC_MODE_DMA)
                         .start(true)
+                        .size(64)
                         .build()
         );
     }
