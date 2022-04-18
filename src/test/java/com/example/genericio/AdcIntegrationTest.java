@@ -192,8 +192,6 @@ public class AdcIntegrationTest {
                         .samplingTime(ADC_SAMPLETIME_239CYCLES_5)
                         .build(),
 
-                CommandUtils.copyDataOnConversionComplete(true),
-
                 AdcStart.builder()
                         .instance(Adc.Instance.ADC1)
                         .mode(AdcStart.Mode.ADC_MODE_DMA)
