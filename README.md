@@ -12,7 +12,8 @@ git clone https://github.com/Michal-Wadowski/generic-io.git
 
 cd generic-io
 
-mvn clean install
+mvn clean install -DskipTests
 ```
+The tests should be skipped if there no device is connected because integration tests will fail.
 
 The built package will be installed in local repository for further use.
