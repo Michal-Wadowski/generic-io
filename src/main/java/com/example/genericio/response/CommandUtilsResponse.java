@@ -1,25 +1,42 @@
 package com.example.genericio.response;
 
 import com.example.genericio.command.CommandUtils;
+import lombok.Getter;
 
 import java.nio.ByteBuffer;
 import java.util.stream.IntStream;
+
+import static com.example.genericio.command.CommandUtils.Command.READ_BUFFER;
 
 public class CommandUtilsResponse implements GenericResponse {
 
     private byte[] buffer;
 
+    @Getter
+    private final CommandUtils.Command command;
+
+    @Getter
+    private int pointer;
+
     public CommandUtilsResponse(ByteBuffer byteBuffer) {
 
         byte commandNumber = byteBuffer.get();
-        CommandUtils.Command command = CommandUtils.Command.values()[commandNumber];
+        command = CommandUtils.Command.values()[commandNumber];
 
-        if (command == CommandUtils.Command.READ_BUFFER) {
-            int adcDataSize = byteBuffer.getInt();
-            if (adcDataSize > 0 && adcDataSize <= 20 * 1024) {
-                buffer = new byte[adcDataSize];
-                byteBuffer.get(buffer);
-            }
+         switch (command) {
+             case READ_BUFFER -> {
+                 int adcDataSize = byteBuffer.getInt();
+                 if (adcDataSize > 0 && adcDataSize <= 20 * 1024) {
+                     buffer = new byte[adcDataSize];
+                     byteBuffer.get(buffer);
+                 }
+             }
+
+             case ALLOC_BUFFER -> pointer = byteBuffer.getInt();
+
+             case FREE_BUFFER -> {
+
+             }
         }
     }
 

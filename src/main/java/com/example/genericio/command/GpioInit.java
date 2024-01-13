@@ -1,14 +1,18 @@
 package com.example.genericio.command;
 
 import lombok.Builder;
+import lombok.NonNull;
 
 @Builder
 public class GpioInit extends GenericCommand {
 
+    @NonNull
     private final GPIO.Port port;
 
+    @NonNull
     private final GPIO.Pin pin;
 
+    @NonNull
     private final GPIO.Mode mode;
 
     private final GPIO.PullMode pull;
