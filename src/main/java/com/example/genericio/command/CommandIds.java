@@ -38,5 +38,7 @@ public enum CommandIds {
 
     NVIC_ENABLE_IRQ,
 
-    COMMAND_UTILS
+    COMMAND_UTILS,
+
+    BUFFER
 }

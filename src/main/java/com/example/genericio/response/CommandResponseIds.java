@@ -38,5 +38,7 @@ public enum CommandResponseIds {
 
     NVIC_ENABLE_IRQ_RESPONSE,
 
-    COMMAND_UTILS_RESPONSE
+    COMMAND_UTILS_RESPONSE,
+
+    BUFFER_RESPONSE
 }

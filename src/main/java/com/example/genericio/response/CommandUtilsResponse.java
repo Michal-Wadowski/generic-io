@@ -6,8 +6,6 @@ import lombok.Getter;
 import java.nio.ByteBuffer;
 import java.util.stream.IntStream;
 
-import static com.example.genericio.command.CommandUtils.Command.READ_BUFFER;
-
 public class CommandUtilsResponse implements GenericResponse {
 
     private byte[] buffer;
@@ -15,28 +13,18 @@ public class CommandUtilsResponse implements GenericResponse {
     @Getter
     private final CommandUtils.Command command;
 
-    @Getter
-    private int pointer;
-
     public CommandUtilsResponse(ByteBuffer byteBuffer) {
-
         byte commandNumber = byteBuffer.get();
         command = CommandUtils.Command.values()[commandNumber];
 
          switch (command) {
-             case READ_BUFFER -> {
+             case READ_ADC_BUFFER:
                  int adcDataSize = byteBuffer.getInt();
                  if (adcDataSize > 0 && adcDataSize <= 20 * 1024) {
                      buffer = new byte[adcDataSize];
                      byteBuffer.get(buffer);
                  }
-             }
-
-             case ALLOC_BUFFER -> pointer = byteBuffer.getInt();
-
-             case FREE_BUFFER -> {
-
-             }
+             break;
         }
     }
 

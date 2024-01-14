@@ -2,7 +2,7 @@ package com.example.genericio.command;
 
 import lombok.Builder;
 
-import static com.example.genericio.command.CommandUtils.Command.READ_BUFFER;
+import static com.example.genericio.command.CommandUtils.Command.READ_ADC_BUFFER;
 
 @Builder
 public class CommandUtils extends GenericCommand {
@@ -13,33 +13,18 @@ public class CommandUtils extends GenericCommand {
 
     public static GenericCommand readBuffer() {
         return CommandUtils.builder()
-                .command(READ_BUFFER)
+                .command(READ_ADC_BUFFER)
                 .build();
     }
 
     @Override
     public byte[] getBytes() {
         switch (command) {
-            case READ_BUFFER:
+            case READ_ADC_BUFFER:
                 bytesBuilder
                         .addShort(CommandIds.COMMAND_UTILS.ordinal())
                         .addByte(command.ordinal());
                 break;
-
-            case ALLOC_BUFFER:
-                bytesBuilder
-                        .addShort(CommandIds.COMMAND_UTILS.ordinal())
-                        .addByte(command.ordinal())
-                        .addShort(size);
-                break;
-
-            case FREE_BUFFER:
-                bytesBuilder
-                        .addShort(CommandIds.COMMAND_UTILS.ordinal())
-                        .addByte(command.ordinal())
-                        .addInt(pointer);
-                break;
-
             default:
                 return null;
         }
@@ -48,8 +33,6 @@ public class CommandUtils extends GenericCommand {
     }
 
     public enum Command {
-        READ_BUFFER,
-        ALLOC_BUFFER,
-        FREE_BUFFER
+        READ_ADC_BUFFER
     }
 }
